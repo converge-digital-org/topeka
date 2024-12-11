@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 3.2
-// LAST UPDATED: 12/11/2024 AT 1:24 PM PT
+// VERSION 3.3
+// LAST UPDATED: 12/11/2024 AT 1:34 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -181,7 +181,7 @@ function initializeFormEventListener() {
 initializeFormEventListener();
 
 // Function to track the "checkout_started" event
-async function trackCheckoutInitiated() {
+async function trackCheckoutInitiated(customerFormData) {
     const currentUrl = window.location.href;
     const targetSubstring = "partial.ly/checkout/confirm";
 
@@ -211,7 +211,7 @@ async function trackCheckoutInitiated() {
 }
 
 // Call the function to track "checkout_started" if conditions are met
-    trackCheckoutInitiated();
+  //  trackCheckoutInitiated();
 
 // Function to track the "checkout_completed" event
 async function trackCheckoutCompleted() {
