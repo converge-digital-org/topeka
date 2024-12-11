@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.0
-// LAST UPDATED: 12/11/2024 AT 2:12 PM PT
+// VERSION 4.1
+// LAST UPDATED: 12/11/2024 AT 2:15 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -220,6 +220,7 @@ async function trackCheckoutInitiated() {
             console.log("Retrieved customerFormData from localStorage:", customerFormData);
 
             const additionalParams = await getAdditionalParams();
+            const onScreenData = getOnScreenData(); // Extract on-screen data
 
             const payload = {
                 ...additionalParams,
