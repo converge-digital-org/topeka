@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 2.1
-// LAST UPDATED: 12/11/2024 AT 11:32 AM PT
+// VERSION 3.0
+// LAST UPDATED: 12/11/2024 AT 1:19 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -149,6 +149,30 @@ async function trackPageView() {
 // Track initial page view
 trackPageView();
 
+// Initialize Checkout Started Form Tracking
+initializeFormEventListener() {
+    const form = document.querySelector('form[action="/checkout/customer"]');
+
+    if (form) {
+        console.log("Form found. Adding submit event listener.");
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            //Extra Form Data
+            const customerFormData = {
+                email: document.getElementById("customer_email")?.value || null,
+                firstName: document.getElementById("customer_first_name")?.value || null,
+                lastName: document.getElementById("customer_last_name")?.value || null,
+                phone: document.getElementById("customer_phone")?.value || null
+            };
+
+            console.log("Form data extracted:", customerFormData);
+        });
+    } else {
+        console.warn("Form with action '/checkout/customer' not found.");
+    }
+}
+
 // Function to track the "checkout_started" event
 async function trackCheckoutInitiated() {
     const currentUrl = window.location.href;
@@ -163,7 +187,8 @@ async function trackCheckoutInitiated() {
                 window.htevents.track(
                     "checkout_started", // Event name
                     {
-                        ...additionalParams
+                        ...additionalParams,
+                        ...customerFormData
                     },
                     () => console.log("Hightouch: 'checkout_started' event tracked successfully.")
                 );
@@ -180,8 +205,6 @@ async function trackCheckoutInitiated() {
 
 // Call the function to track "checkout_started" if conditions are met
     trackCheckoutInitiated();
-
-
 
 // Function to track the "checkout_completed" event
 async function trackCheckoutCompleted() {
@@ -214,4 +237,3 @@ async function trackCheckoutCompleted() {
 
 // Call the function to track "checkout_completed" if conditions are met
     trackCheckoutCompleted();
-
