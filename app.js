@@ -1,6 +1,6 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 3.1
+// VERSION 3.2
 // LAST UPDATED: 12/11/2024 AT 1:24 PM PT
 
 console.log("Hightouch Events app.js script loaded");
@@ -158,7 +158,7 @@ function initializeFormEventListener() {
         form.addEventListener("submit", async function(event) {
             event.preventDefault();
 
-            //Extra Form Data
+            //Extract Form Data
             const customerFormData = {
                 email: document.getElementById("customer_email")?.value || null,
                 firstName: document.getElementById("customer_first_name")?.value || null,
@@ -167,7 +167,11 @@ function initializeFormEventListener() {
             };
 
             console.log("Form data extracted:", customerFormData);
-            
+
+            // Call trackCheckoutInitiated with customerFormData
+            await trackCheckoutInitiated(customerFormData);
+
+            // Submit the form after tracking
             form.submit();
         });
     } else {
