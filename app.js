@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 1.6
-// LAST UPDATED: 12/11/2024 AT 11:19 AM PT
+// VERSION 2.0
+// LAST UPDATED: 12/11/2024 AT 11:26 AM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -148,3 +148,35 @@ async function trackPageView() {
 
 // Track initial page view
 trackPageView();
+
+// Function to track the "checkout_initiated" event
+async function trackCheckoutInitiated() {
+    const currentUrl = window.location.href;
+    const targetSubstring = "partial.ly/checkout/confirm";
+
+    // Check if the current URL contains the target substring
+    if (currentUrl.includes(targetSubstring)) {
+        try {
+            const additionalParams = await getAdditionalParams();
+            
+            if (window.htevents && typeof window.htevents.track === 'function') {
+                window.htevents.track(
+                    "checkout_initiated", // Event name
+                    {
+                        ...additionalParams
+                    },
+                    () => console.log("Hightouch: Checkout initiated event tracked successfully.")
+                );
+            } else {
+                console.error("htevents.track is not defined.");
+            }
+        } catch (error) {
+            console.error("Hightouch: Error tracking checkout_initiated event:", error);
+        }
+    } else {
+        console.log(`Hightouch: URL does not contain '${targetSubstring}'. Event not fired.`);
+    }
+}
+
+// Call the function to track "checkout_initiated" if conditions are met
+    trackCheckoutInitiated();
