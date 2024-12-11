@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.2
-// LAST UPDATED: 12/11/2024 AT 2:21 PM PT
+// VERSION 4.3
+// LAST UPDATED: 12/11/2024 AT 2:25 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -181,12 +181,12 @@ function getOnScreenData() {
         const currencyIso = document.querySelector('.currency-iso')?.textContent.trim() || null;
         const paymentPlanTotal = document.querySelector('.value')?.textContent.trim() || null;
         const subtotal = document.querySelector('.amount')?.textContent.trim() || null;
-        const installmentFee = document.querySelector('.fee amount')?.textContent.trim() || null;
-        const orderTotal = document.querySelector('.total amount')?.textContent.trim() || null;
+        const installmentFee = document.querySelector('.fee.amount')?.textContent.trim() || null;
+        const orderTotal = document.querySelector('.total.amount')?.textContent.trim() || null;
         const depositDue = document.querySelector('.down-payment')?.textContent.trim() || null;
-        const remainingBalance = document.querySelector('.balance amount')?.textContent.trim() || null;
+        const remainingBalance = document.querySelector('.balance.amount')?.textContent.trim() || null;
         const paymentFrequency = document.querySelector('.frequency')?.textContent.trim() || null;
-        const numberOfPayments = document.querySelector('.num-payments amount')?.textContent.trim() || null;
+        const numberOfPayments = document.querySelector('.num-payments.amount')?.textContent.trim() || null;
         const paymentAmount = document.querySelector('.value')?.textContent.trim() || null;
 
         // Return as an object
