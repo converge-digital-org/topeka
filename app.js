@@ -1,4 +1,7 @@
-// HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 12/11/2024 AT 11:00 AM PT //
+// CLIENT: TOPEKA
+// HIGHTOUCH EVENTS APP.JS FILE
+// VERSION 1.5
+// LAST UPDATED: 12/11/2024 AT 11:11 AM PT
 
 console.log("Hightouch Events app.js script loaded");
 
