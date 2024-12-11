@@ -82,7 +82,7 @@ async function getAdditionalParams() {
         ipData.ipv6Address = ipv6Data.ip;
 
         // Fetch Geo data using IPv4
-        const geoResponse = await fetch(https://ipapi.co/${ipv4Data.ip}/json/);
+        const geoResponse = await fetch('https://ipapi.co/${ipv4Data.ip}/json/');
         const geoData = await geoResponse.json();
         ipData = {
             ...ipData,
