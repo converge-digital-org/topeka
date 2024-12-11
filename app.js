@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.8
-// LAST UPDATED: 12/11/2024 AT 3:00 PM PT
+// VERSION 4.9
+// LAST UPDATED: 12/11/2024 AT 3:07 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -149,32 +149,6 @@ async function trackPageView() {
 // Track initial page view
 trackPageView();
 
-// Initialize Checkout Started Form Tracking
-function initializeFormEventListener() {
-    const form = document.querySelector('form[action="/checkout/customer"]');
-
-    if (form) {
-        console.log("Form found. Adding submit event listener.");
-        form.addEventListener("submit", function (event) {
-            const customerFormData = {
-                email: document.getElementById("customer_email")?.value || null,
-                firstName: document.getElementById("customer_first_name")?.value || null,
-                lastName: document.getElementById("customer_last_name")?.value || null,
-                phone: document.getElementById("customer_phone")?.value || null
-            };
-
-            console.log("Form data to save:", customerFormData);
-
-            // Save customerFormData to localStorage
-            localStorage.setItem('customerFormData', JSON.stringify(customerFormData));
-            console.log("Data saved to localStorage:", localStorage.getItem('customerFormData'));
-        });
-    } else {
-        console.warn("Form with action '/checkout/customer' not found.");
-    }
-}
-initializeFormEventListener();
-
 function formatPrice(price) {
     if (!price) return null;
     const numericValue = parseFloat(price.replace('$', '').trim());
@@ -203,20 +177,47 @@ function formatPhone(phone) {
     return null; // Return null if invalid
 }
 
+
+// Initialize Checkout Started Form Tracking
+function initializeFormEventListener() {
+    const form = document.querySelector('form[action="/checkout/customer"]');
+
+    if (form) {
+        console.log("Form found. Adding submit event listener.");
+        form.addEventListener("submit", function (event) {
+            const customerFormData = {
+                email: document.getElementById("customer_email")?.value || null,
+                firstName: document.getElementById("customer_first_name")?.value || null,
+                lastName: document.getElementById("customer_last_name")?.value || null,
+                phone: formatPhone(document.getElementById("customer_phone")?.value || null),
+            };
+
+            console.log("Form data to save:", customerFormData);
+
+            // Save customerFormData to localStorage
+            localStorage.setItem('customerFormData', JSON.stringify(customerFormData));
+            console.log("Data saved to localStorage:", localStorage.getItem('customerFormData'));
+        });
+    } else {
+        console.warn("Form with action '/checkout/customer' not found.");
+    }
+}
+initializeFormEventListener();
+
 // Function to extract on-screen data by class
 function getOnScreenData() {
     try {
         const currencyIso = document.querySelector('.currency-iso')?.textContent.trim() || null;
         const paymentPlanTotal = formatPrice(document.querySelector('.value')?.textContent);
-        const subtotal = document.querySelector('.details tr:nth-child(1) .amount')?.textContent.trim();
-        const downPayment = document.querySelector('.details .down-payment')?.textContent.trim();
-        const installmentFee = document.querySelector('.fee.amount')?.textContent.trim() || null;
-        const orderTotal = document.querySelector('.details .total.amount')?.textContent.trim();
-        const depositDue = document.querySelector('.down-payment')?.textContent.trim() || null;
-        const remainingBalance = document.querySelector('.details .balance.amount strong')?.textContent.trim();
-        const paymentFrequency = document.querySelector('.frequency')?.textContent.trim() || null;
-        const numberOfPayments = document.querySelector('.num-payments.amount')?.textContent.trim() || null;
-        const paymentAmount = document.querySelector('.value')?.textContent.trim() || null;
+        const subtotal = formatPrice(document.querySelector('.details tr:nth-child(1) .amount')?.textContent);
+        const downPayment = formatPrice(document.querySelector('.details .down-payment')?.textContent);
+        const installmentFee = formatPrice(document.querySelector('.fee.amount')?.textContent);
+        const orderTotal = formatPrice(document.querySelector('.details .total.amount')?.textContent);
+        const depositDue = formatPrice(document.querySelector('.down-payment')?.textContent.);
+        const remainingBalance = formatPrice(document.querySelector('.details .balance.amount strong')?.textContent);
+        const paymentFrequency = formatFrequency(document.querySelector('.frequency')?.textContent);
+        const numberOfPayments = parseInt(document.querySelector('.num-payments.amount')?.textContent.trim(), 10) || null;
+        const paymentAmount = formatPrice(document.querySelector('.value')?.textContent);
 
         const onScreenData = {
             currencyIso,
