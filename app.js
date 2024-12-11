@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.3
-// LAST UPDATED: 12/11/2024 AT 2:25 PM PT
+// VERSION 4.4
+// LAST UPDATED: 12/11/2024 AT 2:31 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -206,6 +206,8 @@ function getOnScreenData() {
         // Store the data in local storage
         localStorage.setItem('onScreenData', JSON.stringify(onScreenData));
 
+        console.log("On-screen data stored in local storage:", onScreenData);
+
         return onScreenData;
     } catch (error) {
         console.error("Error extracting on-screen data:", error);
@@ -214,32 +216,24 @@ function getOnScreenData() {
 }
 
 // Function to track the "checkout_started" event
-async function trackCheckoutInitiated() {
+async function trackCheckoutInitiated(customerFormData) {
     const currentUrl = window.location.href;
     const targetSubstring = "partial.ly/checkout/confirm";
 
     if (currentUrl.includes(targetSubstring)) {
         try {
-            // Retrieve customerFormData from localStorage
-            const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
-            console.log("Retrieved customerFormData from localStorage:", customerFormData);
-
             const additionalParams = await getAdditionalParams();
-            const onScreenData = getAndStoreOnScreenData(); // Extract and store on-screen data
-
-            const payload = {
-                ...additionalParams,
-                ...customerFormData,
-                ...onScreenData, // Include the on-screen data
-            };
-
-            console.log("Checkout started event payload:", payload);
+            const onScreenData = getAndStoreOnScreenData();
 
             if (window.htevents && typeof window.htevents.track === 'function') {
                 window.htevents.track(
                     "checkout_started",
-                    payload,
-                    () => console.log("Hightouch: 'checkout_started' event tracked successfully.")
+                    {
+                        ...additionalParams,
+                        ...customerFormData,
+                        ...onScreenData,
+                    },
+                    () => console.log("Hightouch: 'checkout_started' event tracked successfully with on-screen data.")
                 );
             } else {
                 console.error("htevents.track is not defined.");
