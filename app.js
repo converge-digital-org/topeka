@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 3.3
-// LAST UPDATED: 12/11/2024 AT 1:34 PM PT
+// VERSION 3.4
+// LAST UPDATED: 12/11/2024 AT 1:41 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -158,7 +158,6 @@ function initializeFormEventListener() {
         form.addEventListener("submit", async function(event) {
             event.preventDefault();
 
-            //Extract Form Data
             const customerFormData = {
                 email: document.getElementById("customer_email")?.value || null,
                 firstName: document.getElementById("customer_first_name")?.value || null,
@@ -185,14 +184,13 @@ async function trackCheckoutInitiated(customerFormData) {
     const currentUrl = window.location.href;
     const targetSubstring = "partial.ly/checkout/confirm";
 
-    // Check if the current URL contains the target substring
     if (currentUrl.includes(targetSubstring)) {
         try {
             const additionalParams = await getAdditionalParams();
-            
+
             if (window.htevents && typeof window.htevents.track === 'function') {
                 window.htevents.track(
-                    "checkout_started", // Event name
+                    "checkout_started",
                     {
                         ...additionalParams,
                         ...customerFormData
