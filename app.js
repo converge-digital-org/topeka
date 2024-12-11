@@ -258,6 +258,7 @@ async function trackCheckoutInitiated() {
                 console.error("Error parsing customerFormData from localStorage:", error);
             }
             const onScreenData = getOnScreenData();
+            const { currencyIso = "USD", paymentPlanTotal = 0 } = onScreenData || {};
 
             if (window.htevents && typeof window.htevents.track === 'function') {
                 window.htevents.track(
@@ -269,17 +270,19 @@ async function trackCheckoutInitiated() {
                     },
                     () => console.log("Hightouch: 'checkout_started' event tracked successfully with on-screen data.")
                 );
-
-                  fbq(
-                      'track',
-                      'InitiateCheckout',
-                      currency: currencyIso,
-                      value: paymentPlanTotal,
-                  );
-                  console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:");
-                
             } else {
                 console.error("htevents.track is not defined.");
+            }
+
+            // Facebook Pixel tracking
+            if (currencyIso && paymentPlanTotal) {
+                fbq('track', 'InitiateCheckout', {
+                    currency: currencyIso,
+                    value: paymentPlanTotal,
+                });
+                console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
+            } else {
+                console.warn("Facebook Pixel: Missing data for 'InitiateCheckout' event. Skipping...");
             }
         } catch (error) {
             console.error("Hightouch: Error tracking 'checkout_started' event:", error);
