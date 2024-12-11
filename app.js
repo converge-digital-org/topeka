@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.4
-// LAST UPDATED: 12/11/2024 AT 2:31 PM PT
+// VERSION 4.5
+// LAST UPDATED: 12/11/2024 AT 2:34 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -189,8 +189,7 @@ function getOnScreenData() {
         const numberOfPayments = document.querySelector('.num-payments.amount')?.textContent.trim() || null;
         const paymentAmount = document.querySelector('.value')?.textContent.trim() || null;
 
-        // Return as an object
-        return {
+        const onScreenData = {
             currencyIso,
             paymentPlanTotal,
             subtotal,
@@ -203,9 +202,7 @@ function getOnScreenData() {
             paymentAmount,
         };
 
-        // Store the data in local storage
         localStorage.setItem('onScreenData', JSON.stringify(onScreenData));
-
         console.log("On-screen data stored in local storage:", onScreenData);
 
         return onScreenData;
@@ -215,15 +212,17 @@ function getOnScreenData() {
     }
 }
 
+
 // Function to track the "checkout_started" event
-async function trackCheckoutInitiated(customerFormData) {
+async function trackCheckoutInitiated() {
     const currentUrl = window.location.href;
     const targetSubstring = "partial.ly/checkout/confirm";
 
     if (currentUrl.includes(targetSubstring)) {
         try {
             const additionalParams = await getAdditionalParams();
-            const onScreenData = getAndStoreOnScreenData();
+            const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+            const onScreenData = getOnScreenData();
 
             if (window.htevents && typeof window.htevents.track === 'function') {
                 window.htevents.track(
@@ -245,7 +244,6 @@ async function trackCheckoutInitiated(customerFormData) {
         console.log(`Hightouch: URL does not contain '${targetSubstring}'. 'checkout_started' event not fired.`);
     }
 }
-
 // Call the function to track "checkout_started" if conditions are met
 trackCheckoutInitiated();
 
