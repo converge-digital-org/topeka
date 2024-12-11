@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.7
-// LAST UPDATED: 12/11/2024 AT 2:51 PM PT
+// VERSION 4.8
+// LAST UPDATED: 12/11/2024 AT 3:00 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -174,6 +174,34 @@ function initializeFormEventListener() {
     }
 }
 initializeFormEventListener();
+
+function formatPrice(price) {
+    if (!price) return null;
+    const numericValue = parseFloat(price.replace('$', '').trim());
+    return isNaN(numericValue) ? null : numericValue;
+}
+
+function formatFrequency(frequency) {
+    if (!frequency) return null;
+    const numericValue = parseFloat(frequency.replace('month', '').trim());
+    return isNaN(numericValue) ? null : numericValue;
+}
+
+function formatPhone(phone) {
+    if (!phone) return null;
+
+    // Remove non-digit characters
+    const cleaned = phone.replace(/\D/g, '');
+
+    // Check for valid length (assumes US-based or international phone numbers)
+    if (cleaned.length === 10) {
+        return `+1${cleaned}`; // Assuming US-based
+    } else if (cleaned.length > 10) {
+        return `+${cleaned}`;
+    }
+
+    return null; // Return null if invalid
+}
 
 // Function to extract on-screen data by class
 function getOnScreenData() {
