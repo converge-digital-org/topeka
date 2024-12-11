@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.1
-// LAST UPDATED: 12/11/2024 AT 2:15 PM PT
+// VERSION 4.2
+// LAST UPDATED: 12/11/2024 AT 2:21 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -202,6 +202,11 @@ function getOnScreenData() {
             numberOfPayments,
             paymentAmount,
         };
+
+        // Store the data in local storage
+        localStorage.setItem('onScreenData', JSON.stringify(onScreenData));
+
+        return onScreenData;
     } catch (error) {
         console.error("Error extracting on-screen data:", error);
         return {};
@@ -220,7 +225,7 @@ async function trackCheckoutInitiated() {
             console.log("Retrieved customerFormData from localStorage:", customerFormData);
 
             const additionalParams = await getAdditionalParams();
-            const onScreenData = getOnScreenData(); // Extract on-screen data
+            const onScreenData = getAndStoreOnScreenData(); // Extract and store on-screen data
 
             const payload = {
                 ...additionalParams,
