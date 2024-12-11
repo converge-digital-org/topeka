@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 3.4
-// LAST UPDATED: 12/11/2024 AT 1:41 PM PT
+// VERSION 3.5
+// LAST UPDATED: 12/11/2024 AT 1:48 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -155,9 +155,7 @@ function initializeFormEventListener() {
 
     if (form) {
         console.log("Form found. Adding submit event listener.");
-        form.addEventListener("submit", async function(event) {
-            event.preventDefault();
-
+        form.addEventListener("submit", function (event) {
             const customerFormData = {
                 email: document.getElementById("customer_email")?.value || null,
                 firstName: document.getElementById("customer_first_name")?.value || null,
@@ -167,11 +165,8 @@ function initializeFormEventListener() {
 
             console.log("Form data extracted:", customerFormData);
 
-            // Call trackCheckoutInitiated with customerFormData
-            await trackCheckoutInitiated(customerFormData);
-
-            // Submit the form after tracking
-            form.submit();
+            // Save customerFormData to localStorage
+            localStorage.setItem('customerFormData', JSON.stringify(customerFormData));
         });
     } else {
         console.warn("Form with action '/checkout/customer' not found.");
@@ -180,12 +175,15 @@ function initializeFormEventListener() {
 initializeFormEventListener();
 
 // Function to track the "checkout_started" event
-async function trackCheckoutInitiated(customerFormData) {
+async function trackCheckoutInitiated() {
     const currentUrl = window.location.href;
     const targetSubstring = "partial.ly/checkout/confirm";
 
     if (currentUrl.includes(targetSubstring)) {
         try {
+            // Retrieve customerFormData from localStorage
+            const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+
             const additionalParams = await getAdditionalParams();
 
             if (window.htevents && typeof window.htevents.track === 'function') {
@@ -209,7 +207,7 @@ async function trackCheckoutInitiated(customerFormData) {
 }
 
 // Call the function to track "checkout_started" if conditions are met
-  //  trackCheckoutInitiated();
+trackCheckoutInitiated();
 
 // Function to track the "checkout_completed" event
 async function trackCheckoutCompleted() {
