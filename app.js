@@ -35,9 +35,9 @@ function generateFBC(fbclid) {
     if (!fbclid) return null;
     const domain = window.location.hostname;
     const timestamp = Math.floor(Date.now() / 1000);
-    const fbc = fb.${domain}.${timestamp}.${fbclid};
+    const fbc = `fb.${domain}.${timestamp}.${fbclid}`;
 
-    document.cookie = _fbc=${fbc}; path=/; expires=${new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString()}; SameSite=Lax;
+    document.cookie = `_fbc=${fbc}; path=/; expires=${new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString()}; SameSite=Lax`;
 
     return fbc;
 }
@@ -59,7 +59,7 @@ function generateFBP() {
     const randomNumber = Math.random().toString(36).substring(2, 15);
     const fbp = version + timestamp + '.' + randomNumber;
 
-    document.cookie = _fbp=${fbp}; path=/; expires=${new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString()}; SameSite=Lax;
+    document.cookie = `_fbp=${fbp}; path=/; expires=${new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString()}; SameSite=Lax`;s
 
     return fbp;
 }
