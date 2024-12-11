@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.6
-// LAST UPDATED: 12/11/2024 AT 2:41 PM PT
+// VERSION 4.7
+// LAST UPDATED: 12/11/2024 AT 2:51 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -258,12 +258,16 @@ async function trackCheckoutCompleted() {
     if (currentUrl.includes(targetSubstring)) {
         try {
             const additionalParams = await getAdditionalParams();
+            const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+            const onScreenData = getOnScreenData();
             
             if (window.htevents && typeof window.htevents.track === 'function') {
                 window.htevents.track(
                     "checkout_completed", // Event name
                     {
-                        ...additionalParams
+                        ...additionalParams,
+                        ...customerFormData,
+                        ...onScreenData,
                     },
                     () => console.log("Hightouch: 'checkout_completed' event tracked successfully.")
                 );
