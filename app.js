@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 2.0
-// LAST UPDATED: 12/11/2024 AT 11:26 AM PT
+// VERSION 2.1
+// LAST UPDATED: 12/11/2024 AT 11:32 AM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -138,7 +138,7 @@ async function trackPageView() {
                 ...additionalParams
             },
             function() {
-                console.log("Hightouch: Page view tracked:", document.title);
+                console.log("Hightouch: Page view tracked);
             }
         );
     } catch (error) {
@@ -149,7 +149,7 @@ async function trackPageView() {
 // Track initial page view
 trackPageView();
 
-// Function to track the "checkout_initiated" event
+// Function to track the "checkout_started" event
 async function trackCheckoutInitiated() {
     const currentUrl = window.location.href;
     const targetSubstring = "partial.ly/checkout/confirm";
@@ -161,22 +161,57 @@ async function trackCheckoutInitiated() {
             
             if (window.htevents && typeof window.htevents.track === 'function') {
                 window.htevents.track(
-                    "checkout_initiated", // Event name
+                    "checkout_started", // Event name
                     {
                         ...additionalParams
                     },
-                    () => console.log("Hightouch: Checkout initiated event tracked successfully.")
+                    () => console.log("Hightouch: 'checkout_started' event tracked successfully.")
                 );
             } else {
                 console.error("htevents.track is not defined.");
             }
         } catch (error) {
-            console.error("Hightouch: Error tracking checkout_initiated event:", error);
+            console.error("Hightouch: Error tracking 'checkout_started' event:", error);
         }
     } else {
-        console.log(`Hightouch: URL does not contain '${targetSubstring}'. Event not fired.`);
+        console.log(`Hightouch: URL does not contain '${targetSubstring}'. 'checkout_started' event not fired.`);
     }
 }
 
-// Call the function to track "checkout_initiated" if conditions are met
+// Call the function to track "checkout_started" if conditions are met
     trackCheckoutInitiated();
+
+
+
+// Function to track the "checkout_completed" event
+async function trackCheckoutCompleted() {
+    const currentUrl = window.location.href;
+    const targetSubstring = "partial.ly/checkout/confirmed";
+
+    // Check if the current URL contains the target substring
+    if (currentUrl.includes(targetSubstring)) {
+        try {
+            const additionalParams = await getAdditionalParams();
+            
+            if (window.htevents && typeof window.htevents.track === 'function') {
+                window.htevents.track(
+                    "checkout_completed", // Event name
+                    {
+                        ...additionalParams
+                    },
+                    () => console.log("Hightouch: 'checkout_completed' event tracked successfully.")
+                );
+            } else {
+                console.error("htevents.track is not defined.");
+            }
+        } catch (error) {
+            console.error("Hightouch: Error tracking 'checkout_completed' event:", error);
+        }
+    } else {
+        console.log(`Hightouch: URL does not contain '${targetSubstring}'. 'checkout_completed' event not fired.`);
+    }
+}
+
+// Call the function to track "checkout_completed" if conditions are met
+    trackCheckoutCompleted();
+
