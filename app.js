@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 3.0
-// LAST UPDATED: 12/11/2024 AT 1:19 PM PT
+// VERSION 3.1
+// LAST UPDATED: 12/11/2024 AT 1:24 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -150,7 +150,7 @@ async function trackPageView() {
 trackPageView();
 
 // Initialize Checkout Started Form Tracking
-initializeFormEventListener() {
+function initializeFormEventListener() {
     const form = document.querySelector('form[action="/checkout/customer"]');
 
     if (form) {
@@ -167,11 +167,14 @@ initializeFormEventListener() {
             };
 
             console.log("Form data extracted:", customerFormData);
+            
+            form.submit();
         });
     } else {
         console.warn("Form with action '/checkout/customer' not found.");
     }
 }
+initializeFormEventListener();
 
 // Function to track the "checkout_started" event
 async function trackCheckoutInitiated() {
