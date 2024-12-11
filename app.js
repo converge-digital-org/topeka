@@ -179,7 +179,7 @@ initializeFormEventListener();
 function getOnScreenData() {
     try {
         const currencyIso = document.querySelector('.currency-iso')?.textContent.trim() || null;
-        const paymentPlanTotal = document.querySelector('.value')?.textContent.trim() || null;
+        const paymentPlanTotal = formatPrice(document.querySelector('.value')?.textContent);
         const subtotal = document.querySelector('.details tr:nth-child(1) .amount')?.textContent.trim();
         const downPayment = document.querySelector('.details .down-payment')?.textContent.trim();
         const installmentFee = document.querySelector('.fee.amount')?.textContent.trim() || null;
