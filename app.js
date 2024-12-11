@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 3.5
-// LAST UPDATED: 12/11/2024 AT 1:48 PM PT
+// VERSION 3.6
+// LAST UPDATED: 12/11/2024 AT 1:52 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -163,10 +163,11 @@ function initializeFormEventListener() {
                 phone: document.getElementById("customer_phone")?.value || null
             };
 
-            console.log("Form data extracted:", customerFormData);
+            console.log("Form data to save:", customerFormData);
 
             // Save customerFormData to localStorage
             localStorage.setItem('customerFormData', JSON.stringify(customerFormData));
+            console.log("Data saved to localStorage:", localStorage.getItem('customerFormData'));
         });
     } else {
         console.warn("Form with action '/checkout/customer' not found.");
@@ -183,16 +184,21 @@ async function trackCheckoutInitiated() {
         try {
             // Retrieve customerFormData from localStorage
             const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+            console.log("Retrieved customerFormData from localStorage:", customerFormData);
 
             const additionalParams = await getAdditionalParams();
+
+            const payload = {
+                ...additionalParams,
+                ...customerFormData
+            };
+
+            console.log("Checkout started event payload:", payload);
 
             if (window.htevents && typeof window.htevents.track === 'function') {
                 window.htevents.track(
                     "checkout_started",
-                    {
-                        ...additionalParams,
-                        ...customerFormData
-                    },
+                    payload,
                     () => console.log("Hightouch: 'checkout_started' event tracked successfully.")
                 );
             } else {
