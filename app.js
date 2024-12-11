@@ -62,7 +62,7 @@ function generateFBP() {
     const randomNumber = Math.random().toString(36).substring(2, 15);
     const fbp = version + timestamp + '.' + randomNumber;
 
-    document.cookie = `_fbp=${fbp}; path=/; expires=${new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString()}; SameSite=Lax`;s
+    document.cookie = `_fbp=${fbp}; path=/; expires=${new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString()}; SameSite=Lax`;
 
     return fbp;
 }
