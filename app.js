@@ -1,3 +1,5 @@
+// HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 12/11/2024 AT 11:00 AM PT //
+
 console.log("Hightouch Events app.js script loaded");
 
 // Generate a 36-character, 128-bit GUID with hyphens
