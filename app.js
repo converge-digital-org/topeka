@@ -194,7 +194,7 @@ function getOnScreenData() {
             currencyIso,
             paymentPlanTotal,
             subtotal,
-            downpayment,
+            downPayment,
             installmentFee,
             orderTotal,
             depositDue,
