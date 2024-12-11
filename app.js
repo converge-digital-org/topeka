@@ -138,7 +138,7 @@ async function trackPageView() {
                 ...additionalParams
             },
             function() {
-                console.log("Hightouch: Page view tracked);
+                console.log("Hightouch: Page view tracked");
             }
         );
     } catch (error) {
