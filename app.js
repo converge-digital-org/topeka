@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.10
-// LAST UPDATED: 12/11/2024 AT 3:10 PM PT
+// VERSION 4.11
+// LAST UPDATED: 12/11/2024 AT 3:18 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -269,6 +269,15 @@ async function trackCheckoutInitiated() {
                     },
                     () => console.log("Hightouch: 'checkout_started' event tracked successfully with on-screen data.")
                 );
+
+                  fbq(
+                      'track',
+                      'InitiateCheckout',
+                      currency: currencyIso,
+                      value: paymentPlanTotal,
+                  );
+                  console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:");
+                
             } else {
                 console.error("htevents.track is not defined.");
             }
