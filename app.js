@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 3.6
-// LAST UPDATED: 12/11/2024 AT 1:52 PM PT
+// VERSION 4.0
+// LAST UPDATED: 12/11/2024 AT 2:12 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -175,6 +175,39 @@ function initializeFormEventListener() {
 }
 initializeFormEventListener();
 
+// Function to extract on-screen data by class
+function getOnScreenData() {
+    try {
+        const currencyIso = document.querySelector('.currency-iso')?.textContent.trim() || null;
+        const paymentPlanTotal = document.querySelector('.value')?.textContent.trim() || null;
+        const subtotal = document.querySelector('.amount')?.textContent.trim() || null;
+        const installmentFee = document.querySelector('.fee amount')?.textContent.trim() || null;
+        const orderTotal = document.querySelector('.total amount')?.textContent.trim() || null;
+        const depositDue = document.querySelector('.down-payment')?.textContent.trim() || null;
+        const remainingBalance = document.querySelector('.balance amount')?.textContent.trim() || null;
+        const paymentFrequency = document.querySelector('.frequency')?.textContent.trim() || null;
+        const numberOfPayments = document.querySelector('.num-payments amount')?.textContent.trim() || null;
+        const paymentAmount = document.querySelector('.value')?.textContent.trim() || null;
+
+        // Return as an object
+        return {
+            currencyIso,
+            paymentPlanTotal,
+            subtotal,
+            installmentFee,
+            orderTotal,
+            depositDue,
+            remainingBalance,
+            paymentFrequency,
+            numberOfPayments,
+            paymentAmount,
+        };
+    } catch (error) {
+        console.error("Error extracting on-screen data:", error);
+        return {};
+    }
+}
+
 // Function to track the "checkout_started" event
 async function trackCheckoutInitiated() {
     const currentUrl = window.location.href;
@@ -190,7 +223,8 @@ async function trackCheckoutInitiated() {
 
             const payload = {
                 ...additionalParams,
-                ...customerFormData
+                ...customerFormData,
+                ...onScreenData, // Include the on-screen data
             };
 
             console.log("Checkout started event payload:", payload);
