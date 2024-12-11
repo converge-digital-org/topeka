@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.9
-// LAST UPDATED: 12/11/2024 AT 3:07 PM PT
+// VERSION 4.10
+// LAST UPDATED: 12/11/2024 AT 3:10 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -213,7 +213,7 @@ function getOnScreenData() {
         const downPayment = formatPrice(document.querySelector('.details .down-payment')?.textContent);
         const installmentFee = formatPrice(document.querySelector('.fee.amount')?.textContent);
         const orderTotal = formatPrice(document.querySelector('.details .total.amount')?.textContent);
-        const depositDue = formatPrice(document.querySelector('.down-payment')?.textContent.);
+        const depositDue = formatPrice(document.querySelector('.down-payment')?.textContent); // Fixed typo
         const remainingBalance = formatPrice(document.querySelector('.details .balance.amount strong')?.textContent);
         const paymentFrequency = formatFrequency(document.querySelector('.frequency')?.textContent);
         const numberOfPayments = parseInt(document.querySelector('.num-payments.amount')?.textContent.trim(), 10) || null;
@@ -243,7 +243,6 @@ function getOnScreenData() {
     }
 }
 
-
 // Function to track the "checkout_started" event
 async function trackCheckoutInitiated() {
     const currentUrl = window.location.href;
@@ -252,7 +251,12 @@ async function trackCheckoutInitiated() {
     if (currentUrl.includes(targetSubstring)) {
         try {
             const additionalParams = await getAdditionalParams();
-            const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+            let customerFormData = {};
+            try {
+                customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+            } catch (error) {
+                console.error("Error parsing customerFormData from localStorage:", error);
+            }
             const onScreenData = getOnScreenData();
 
             if (window.htevents && typeof window.htevents.track === 'function') {
