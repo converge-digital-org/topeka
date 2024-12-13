@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.13
-// LAST UPDATED: 12/13/2024 AT 11:15 AM PT
+// VERSION 4.14
+// LAST UPDATED: 12/13/2024 AT 11:38 AM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -131,6 +131,8 @@ async function getAdditionalParams() {
 async function trackPageView() {
     try {
         const additionalParams = await getAdditionalParams();
+
+        // Hightouch Page View Event
         window.htevents.page(
             "partial.ly",
             "page_viewed",
@@ -141,6 +143,14 @@ async function trackPageView() {
                 console.log("Hightouch: Page view tracked");
             }
         );
+
+        // Facebook Pixel Page View Event
+        fbq('track', 'PageView', {
+            external_id: getDeviceId(),
+            eventID: generateGUID(),
+                }
+           );
+        console.log("Facebook Pixel: 'PageView' Event Tracked");
     } catch (error) {
         console.error("Hightouch: Error tracking page view:", error);
     }
@@ -279,6 +289,8 @@ async function trackCheckoutInitiated() {
                 fbq('track', 'InitiateCheckout', {
                     currency: currencyIso,
                     value: paymentPlanTotal,
+                    external_id: getDeviceId(),
+                    eventID: generateGUID(),
                 });
                 console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
             } else {
@@ -334,6 +346,8 @@ async function trackCheckoutCompletedOnButtonPress() {
                     fbq('track', 'Purchase', {
                         currency: currencyIso,
                         value: paymentPlanTotal,
+                        external_id: getDeviceId(),
+                        eventID: generateGUID(),
                     });
                     console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
                 } else {
