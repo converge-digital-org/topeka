@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 5.5
-// LAST UPDATED: 12/13/2024 AT 12:12 PM PT
+// VERSION 5.6
+// LAST UPDATED: 12/13/2024 AT 12:15 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -176,12 +176,11 @@ async function trackPageView() {
         );
 
         // Facebook Pixel Page View Event
-        fbq('track', 'PageView', {
+        fbq('track', 'PageView', {}, {
             external_id: getDeviceId(),
             eventID: generateGUID(),
-                },
-            advancedMatchingParams
-           );
+            advancedMatchingParams,
+    });
         console.log("Facebook Pixel: 'PageView' Event Tracked");
     } catch (error) {
         console.error("Hightouch: Error tracking page view:", error);
