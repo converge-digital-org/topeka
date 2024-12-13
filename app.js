@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.11
-// LAST UPDATED: 12/11/2024 AT 3:18 PM PT
+// VERSION 4.12
+// LAST UPDATED: 12/13/2024 AT 11:07 AM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -295,37 +295,47 @@ async function trackCheckoutInitiated() {
 trackCheckoutInitiated();
 
 // Function to track the "checkout_completed" event
-async function trackCheckoutCompleted() {
-    const currentUrl = window.location.href;
-    const targetSubstring = "partial.ly/checkout/confirmed";
+async function trackCheckoutCompletedOnButtonPress() {
+    try {
+        // Locate the submit button on the form
+        const submitButton = document.querySelector('form[action="/checkout/confirm"] button[type="submit"]');
 
-    // Check if the current URL contains the target substring
-    if (currentUrl.includes(targetSubstring)) {
-        try {
-            const additionalParams = await getAdditionalParams();
-            const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
-            const onScreenData = getOnScreenData();
+        if (submitButton) {
+            console.log("Submit button found. Adding click event listener.");
             
-            if (window.htevents && typeof window.htevents.track === 'function') {
-                window.htevents.track(
-                    "checkout_completed", // Event name
-                    {
-                        ...additionalParams,
-                        ...customerFormData,
-                        ...onScreenData,
-                    },
-                    () => console.log("Hightouch: 'checkout_completed' event tracked successfully.")
-                );
-            } else {
-                console.error("htevents.track is not defined.");
-            }
-        } catch (error) {
-            console.error("Hightouch: Error tracking 'checkout_completed' event:", error);
+            submitButton.addEventListener('click', async function (event) {
+                // Prevent the default form submission to ensure the event fires
+                event.preventDefault();
+
+                // Fetch additional parameters and form data
+                const additionalParams = await getAdditionalParams();
+                const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+                const onScreenData = getOnScreenData();
+
+                if (window.htevents && typeof window.htevents.track === 'function') {
+                    window.htevents.track(
+                        "checkout_completed", // Event name
+                        {
+                            ...additionalParams,
+                            ...customerFormData,
+                            ...onScreenData,
+                        },
+                        () => console.log("Hightouch: 'checkout_completed' event tracked successfully.")
+                    );
+                } else {
+                    console.error("htevents.track is not defined.");
+                }
+
+                // Optionally allow the form to proceed after tracking
+                event.target.form.submit();
+            });
+        } else {
+            console.warn("Submit button not found on '/checkout/confirm' page.");
         }
-    } else {
-        console.log(`Hightouch: URL does not contain '${targetSubstring}'. 'checkout_completed' event not fired.`);
+    } catch (error) {
+        console.error("Hightouch: Error setting up 'checkout_completed' event tracking on button press:", error);
     }
 }
 
-// Call the function to track "checkout_completed" if conditions are met
-    trackCheckoutCompleted();
+// Initialize tracking for "checkout_completed" on button press
+trackCheckoutCompletedOnButtonPress();
