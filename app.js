@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 5.4
-// LAST UPDATED: 12/13/2024 AT 12:06 PM PT
+// VERSION 5.5
+// LAST UPDATED: 12/13/2024 AT 12:12 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -322,10 +322,11 @@ async function trackCheckoutInitiated() {
                 fbq('track', 'InitiateCheckout', {
                     currency: currencyIso,
                     value: paymentPlanTotal,
+                }, {
+                    ...advancedMatchingParams,
+                    eventID: generateGUID(),
                     external_id: getDeviceId(),
-                    eventID: generateGUID()},
-                    advancedMatchingParams
-                );
+                });
                 console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
             } else {
                 console.warn("Facebook Pixel: Missing data for 'InitiateCheckout' event. Skipping...");
@@ -399,9 +400,11 @@ async function trackCheckoutCompletedOnButtonPress() {
                     fbq('track', 'Purchase', {
                         currency: currencyIso,
                         value: paymentPlanTotal,
+                    }, {
+                        ...advancedMatchingParams,
+                        eventID: generateGUID(),
                         external_id: getDeviceId(),
-                        eventID: generateGUID(),},
-                        advancedMatchingParams);
+                    });
                     console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
                 } else {
                     console.warn("Facebook Pixel: Missing data for 'Purchase' event. Skipping...");
