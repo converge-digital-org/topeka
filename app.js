@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 5.2
-// LAST UPDATED: 12/13/2024 AT 12:01 PM PT
+// VERSION 5.3
+// LAST UPDATED: 12/13/2024 AT 12:03 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -402,10 +402,6 @@ async function trackCheckoutCompletedOnButtonPress() {
                     });
                 } else {
                     console.warn("Google Ads: 'gtag' is not defined. Skipping conversion event.");
-                }
-
-                } catch (error) {
-                console.error("Error during event tracking:", error);
                 }
 
                 // Allow the form to proceed after tracking
