@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.12
-// LAST UPDATED: 12/13/2024 AT 11:07 AM PT
+// VERSION 4.13
+// LAST UPDATED: 12/13/2024 AT 11:15 AM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -294,17 +294,18 @@ async function trackCheckoutInitiated() {
 // Call the function to track "checkout_started" if conditions are met
 trackCheckoutInitiated();
 
-// Function to track the "checkout_completed" event
+// Function to track the "checkout_completed" event on button press
 async function trackCheckoutCompletedOnButtonPress() {
     try {
-        // Locate the submit button on the form
-        const submitButton = document.querySelector('form[action="/checkout/confirm"] button[type="submit"]');
+        // Locate the submit button using its ID
+        const submitButton = document.getElementById('btn-submit');
 
         if (submitButton) {
             console.log("Submit button found. Adding click event listener.");
-            
+
+            // Add a click event listener to the submit button
             submitButton.addEventListener('click', async function (event) {
-                // Prevent the default form submission to ensure the event fires
+                // Prevent the default button action to ensure tracking completes
                 event.preventDefault();
 
                 // Fetch additional parameters and form data
@@ -312,6 +313,7 @@ async function trackCheckoutCompletedOnButtonPress() {
                 const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
                 const onScreenData = getOnScreenData();
 
+                // Hightouch tracking
                 if (window.htevents && typeof window.htevents.track === 'function') {
                     window.htevents.track(
                         "checkout_completed", // Event name
@@ -326,11 +328,23 @@ async function trackCheckoutCompletedOnButtonPress() {
                     console.error("htevents.track is not defined.");
                 }
 
-                // Optionally allow the form to proceed after tracking
-                event.target.form.submit();
+                // Facebook Pixel tracking (optional)
+                const { currencyIso = "USD", paymentPlanTotal = 0 } = onScreenData || {};
+                if (currencyIso && paymentPlanTotal) {
+                    fbq('track', 'Purchase', {
+                        currency: currencyIso,
+                        value: paymentPlanTotal,
+                    });
+                    console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
+                } else {
+                    console.warn("Facebook Pixel: Missing data for 'Purchase' event. Skipping...");
+                }
+
+                // Allow the form to proceed after tracking
+                document.getElementById('payment-form').submit();
             });
         } else {
-            console.warn("Submit button not found on '/checkout/confirm' page.");
+            console.warn("Submit button not found with ID 'btn-submit'.");
         }
     } catch (error) {
         console.error("Hightouch: Error setting up 'checkout_completed' event tracking on button press:", error);
