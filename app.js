@@ -1,9 +1,37 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 4.14
-// LAST UPDATED: 12/13/2024 AT 11:38 AM PT
+// VERSION 5.1
+// LAST UPDATED: 12/13/2024 AT 11:54 AM PT
 
 console.log("Hightouch Events app.js script loaded");
+
+// Function to hash a string using SHA-256
+async function hashSHA256(value) {
+    if (!value) return null;
+
+    const encoder = new TextEncoder();
+    const data = encoder.encode(value.trim().toLowerCase()); // Convert to lowercase as required by Facebook
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer)); // Convert buffer to byte array
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // Convert bytes to hex
+}
+
+// Function to collect and hash advanced matching parameters
+async function getAdvancedMatchingParameters() {
+    const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+
+    const email = customerFormData.email || null;
+    const phone = customerFormData.phone || null;
+    const firstName = customerFormData.firstName || null;
+    const lastName = customerFormData.lastName || null;
+
+    return {
+        em: email ? await hashSHA256(email) : null,
+        ph: phone ? await hashSHA256(phone) : null,
+        fn: firstName ? await hashSHA256(firstName) : null,
+        ln: lastName ? await hashSHA256(lastName) : null,
+    };
+}
 
 // Function to generate a 36-character, 128-bit GUID with hyphens
 function generateGUID() {
@@ -132,6 +160,9 @@ async function trackPageView() {
     try {
         const additionalParams = await getAdditionalParams();
 
+         // Facebook Advanced Matching Parameters
+        const advancedMatchingParams = await getAdvancedMatchingParameters();
+
         // Hightouch Page View Event
         window.htevents.page(
             "partial.ly",
@@ -148,7 +179,8 @@ async function trackPageView() {
         fbq('track', 'PageView', {
             external_id: getDeviceId(),
             eventID: generateGUID(),
-                }
+                },
+            advancedMatchingParams
            );
         console.log("Facebook Pixel: 'PageView' Event Tracked");
     } catch (error) {
@@ -261,6 +293,7 @@ async function trackCheckoutInitiated() {
     if (currentUrl.includes(targetSubstring)) {
         try {
             const additionalParams = await getAdditionalParams();
+            const advancedMatchingParams = await getAdvancedMatchingParameters();
             let customerFormData = {};
             try {
                 customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
@@ -290,8 +323,9 @@ async function trackCheckoutInitiated() {
                     currency: currencyIso,
                     value: paymentPlanTotal,
                     external_id: getDeviceId(),
-                    eventID: generateGUID(),
-                });
+                    eventID: generateGUID()},
+                    advancedMatchingParams
+                );
                 console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
             } else {
                 console.warn("Facebook Pixel: Missing data for 'InitiateCheckout' event. Skipping...");
@@ -322,6 +356,7 @@ async function trackCheckoutCompletedOnButtonPress() {
 
                 // Fetch additional parameters and form data
                 const additionalParams = await getAdditionalParams();
+                const advancedMatchingParams = await getAdvancedMatchingParameters();
                 const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
                 const onScreenData = getOnScreenData();
 
@@ -347,8 +382,8 @@ async function trackCheckoutCompletedOnButtonPress() {
                         currency: currencyIso,
                         value: paymentPlanTotal,
                         external_id: getDeviceId(),
-                        eventID: generateGUID(),
-                    });
+                        eventID: generateGUID(),},
+                        advancedMatchingParams);
                     console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
                 } else {
                     console.warn("Facebook Pixel: Missing data for 'Purchase' event. Skipping...");
