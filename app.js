@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 5.1
-// LAST UPDATED: 12/13/2024 AT 11:54 AM PT
+// VERSION 5.2
+// LAST UPDATED: 12/13/2024 AT 12:01 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -387,6 +387,25 @@ async function trackCheckoutCompletedOnButtonPress() {
                     console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
                 } else {
                     console.warn("Facebook Pixel: Missing data for 'Purchase' event. Skipping...");
+                }
+
+                // Google Ads Conversion Event
+                if (typeof gtag === "function") {
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-11394685026/BMCCCM_K-uYZEOKwtLkq',
+                        'value': paymentPlanTotal || 0,
+                        'currency': currencyIso || 'USD',
+                    });
+                    console.log("Google Ads: Checkout completed event fired with data:", {
+                        value: paymentPlanTotal,
+                        currency: currencyIso,
+                    });
+                } else {
+                    console.warn("Google Ads: 'gtag' is not defined. Skipping conversion event.");
+                }
+
+                } catch (error) {
+                console.error("Error during event tracking:", error);
                 }
 
                 // Allow the form to proceed after tracking
