@@ -250,11 +250,15 @@ function getOnScreenData() {
     try {
         const currencyIso = document.querySelector('.currency-iso')?.textContent.trim() || null;
         const paymentPlanTotal = formatPrice(document.querySelector('.value')?.textContent);
+        const paymentPlanTotalInt = paymentPlanTotal && !isNaN(paymentPlanTotal) 
+            ? Math.floor(paymentPlanTotal) 
+            : null;
+
         const subtotal = formatPrice(document.querySelector('.details tr:nth-child(1) .amount')?.textContent);
         const downPayment = formatPrice(document.querySelector('.details .down-payment')?.textContent);
         const installmentFee = formatPrice(document.querySelector('.fee.amount')?.textContent);
         const orderTotal = formatPrice(document.querySelector('.details .total.amount')?.textContent);
-        const depositDue = formatPrice(document.querySelector('.down-payment')?.textContent); // Fixed typo
+        const depositDue = formatPrice(document.querySelector('.down-payment')?.textContent);
         const remainingBalance = formatPrice(document.querySelector('.details .balance.amount strong')?.textContent);
         const paymentFrequency = formatFrequency(document.querySelector('.frequency')?.textContent);
         const numberOfPayments = parseInt(document.querySelector('.num-payments.amount')?.textContent.trim(), 10) || null;
@@ -262,7 +266,7 @@ function getOnScreenData() {
 
         const onScreenData = {
             currencyIso,
-            paymentPlanTotal,
+            paymentPlanTotal: paymentPlanTotalInt,
             subtotal,
             downPayment,
             installmentFee,
