@@ -190,10 +190,10 @@ async function trackPageView() {
 // Track initial page view
 trackPageView();
 
-function formatPrice(price) {
-    if (!price) return null;
-    const numericValue = parseFloat(price.replace('$', '').trim());
-    return isNaN(numericValue) ? null : numericValue;
+function formatPrice(value) {
+    if (!value) return null;
+    const floatValue = parseFloat(value.replace(/[^0-9.-]/g, ''));
+    return isNaN(floatValue) ? null : Math.floor(floatValue);
 }
 
 function formatFrequency(frequency) {
