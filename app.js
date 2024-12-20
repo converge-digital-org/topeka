@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.1
-// LAST UPDATED: 12/20/2024 AT 1:41 PM PT
+// VERSION 6.2
+// LAST UPDATED: 12/20/2024 AT 1:49 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -404,7 +404,27 @@ async function trackCheckoutInitiated() {
             });
             console.log("GA4: Begin Checkout event fired to Google Tag");
 
+            // TikTok: InitiateCheckout Event
+            try {  
+                // Identity Call
+                ttq.identify({
+                    "external_id": getDeviceId(),
+                    getAdvancedMatchingParametersTT
+                });
+            
+                // Event Call
+                ttq.track('InitiateCheckout', {
+                    "event_id": generateGUID(),
+                    "value": paymentPlanTotal,
+                    "currency": currencyIso,
+                });  
+                
+                console.log("TikTok Pixel: 'InitiateCheckout' Event Successfully Tracked:", event);
+              } catch (error) {
+                console.error("TikTok Pixel: 'InitiateCheckout' Event Tracking Failed:", error);
+              }
 
+            
         } catch (error) {
             console.error("Hightouch: Error tracking 'checkout_started' event:", error);
         }
