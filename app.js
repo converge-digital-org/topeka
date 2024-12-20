@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.3
-// LAST UPDATED: 12/20/2024 AT 1:57 PM PT
+// VERSION 6.4
+// LAST UPDATED: 12/20/2024 AT 2:03 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -212,10 +212,10 @@ async function trackPageView() {
             // Identity Call
             ttq.identify({
               "external_id": getDeviceId(),
-                getAdvancedMatchingParametersTT
+                ...getAdvancedMatchingParametersTT
             });
 
-              console.log("TikTok Advanced Matching Parameters Captured:", getAdvancedMatchingParametersTT);
+              console.log("TikTok Advanced Matching Parameters Captured:", ...getAdvancedMatchingParametersTT);
 
             
             // Event Call
@@ -412,7 +412,7 @@ async function trackCheckoutInitiated() {
                 // Identity Call
                 ttq.identify({
                     "external_id": getDeviceId(),
-                    getAdvancedMatchingParametersTT
+                    ...getAdvancedMatchingParametersTT
                 });
             
                 // Event Call
