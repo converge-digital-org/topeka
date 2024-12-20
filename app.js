@@ -211,7 +211,7 @@ async function trackPageView() {
         try {  
             // Identity Call
             ttq.identify({
-              "external_id": getDeviceID(),
+              "external_id": getDeviceId(),
                 getAdvancedMatchingParametersTT
             });
             
