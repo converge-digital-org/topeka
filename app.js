@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 5.6
-// LAST UPDATED: 12/13/2024 AT 12:15 PM PT
+// VERSION 6.0
+// LAST UPDATED: 12/19/2024 AT 4:35 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -155,6 +155,8 @@ async function getAdditionalParams() {
     };
 }
 
+console.log("GA4: Google Tag initialized with ID: G-LVNXE75QV1");
+
 // Track Page Views
 async function trackPageView() {
     try {
@@ -181,7 +183,17 @@ async function trackPageView() {
             eventID: generateGUID(),
             advancedMatchingParams,
     });
-        console.log("Facebook Pixel: 'PageView' Event Tracked");
+    console.log("Facebook Pixel: 'PageView' Event Tracked");
+
+
+        // GA4: Page View Event
+        gtag('event', 'page_view', {
+            'send_to': 'G-LVNXE75QV1',
+            'user_id': getDeviceId(),
+            'event_id': generateGUID(),
+        });
+        console.log("GA4: Page view event fired to Google Tag");
+
     } catch (error) {
         console.error("Hightouch: Error tracking page view:", error);
     }
@@ -351,6 +363,16 @@ async function trackCheckoutInitiated() {
             }
 
 
+            // GA4: Begin Checkout
+            gtag('event', 'begin_checkout', {
+                'send_to': 'G-LVNXE75QV1',
+                'user_id': getDeviceId(),
+                'event_id': generateGUID(),
+                'currency': currencyIso,
+                'value': paymentPlanTotal,
+            });
+            console.log("GA4: Begin Checkout event fired to Google Tag");
+
 
         } catch (error) {
             console.error("Hightouch: Error tracking 'checkout_started' event:", error);
@@ -427,6 +449,16 @@ async function trackCheckoutCompletedOnButtonPress() {
                 } else {
                     console.warn("Google Ads: 'gtag' is not defined. Skipping conversion event.");
                 }
+
+                // GA4: Purchase Checkout
+                gtag('event', 'purchase', {
+                    'send_to': 'G-LVNXE75QV1',
+                    'user_id': getDeviceId(),
+                    'event_id': generateGUID(),
+                    'currency': currencyIso,
+                    'value': paymentPlanTotal,
+                });
+                console.log("GA4: Purchase event fired to Google Tag");
 
                 // Allow the form to proceed after tracking
                 document.getElementById('payment-form').submit();
