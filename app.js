@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.4
-// LAST UPDATED: 12/20/2024 AT 2:03 PM PT
+// VERSION 6.5
+// LAST UPDATED: 12/20/2024 AT 2:09 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -510,6 +510,26 @@ async function trackCheckoutCompletedOnButtonPress() {
                     'value': paymentPlanTotal,
                 });
                 console.log("GA4: Purchase event fired to Google Tag");
+
+            // TikTok: PlaceAnOrder Event
+            try {  
+                // Identity Call
+                ttq.identify({
+                    "external_id": getDeviceId(),
+                    ...getAdvancedMatchingParametersTT
+                });
+            
+                // Event Call
+                ttq.track('PlaceAnOrder', {
+                    "event_id": generateGUID(),
+                    "value": paymentPlanTotal,
+                    "currency": currencyIso,
+                });  
+                
+                console.log("TikTok Pixel: 'PlaceAnOrder' Event Successfully Tracked:", event);
+              } catch (error) {
+                console.error("TikTok Pixel: 'PlaceAnOrder' Event Tracking Failed:", error);
+              }
 
                 // Allow the form to proceed after tracking
                 document.getElementById('payment-form').submit();
