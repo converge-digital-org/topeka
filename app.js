@@ -214,9 +214,6 @@ async function trackPageView() {
               "external_id": getDeviceId(),
                 ...getAdvancedMatchingParametersTT
             });
-
-              console.log("TikTok Advanced Matching Parameters Captured:", ...getAdvancedMatchingParametersTT);
-
             
             // Event Call
             ttq.page({
