@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.0
-// LAST UPDATED: 12/19/2024 AT 4:35 PM PT
+// VERSION 6.1
+// LAST UPDATED: 12/20/2024 AT 1:41 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -30,6 +30,19 @@ async function getAdvancedMatchingParameters() {
         ph: phone ? await hashSHA256(phone) : null,
         fn: firstName ? await hashSHA256(firstName) : null,
         ln: lastName ? await hashSHA256(lastName) : null,
+    };
+}
+
+// TIKTOK: Function to collect and hash advanced matching parameters
+async function getAdvancedMatchingParametersTT() {
+    const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+
+    const email = customerFormData.email || null;
+    const phone = customerFormData.phone || null;
+
+    return {
+        email: email ? await hashSHA256(email) : null,
+        phone_number: phone ? await hashSHA256(phone) : null,
     };
 }
 
@@ -193,6 +206,24 @@ async function trackPageView() {
             'event_id': generateGUID(),
         });
         console.log("GA4: Page view event fired to Google Tag");
+
+        // TikTok: Page View Event
+        try {  
+            // Identity Call
+            ttq.identify({
+              "external_id": getDeviceID(),
+                getAdvancedMatchingParametersTT
+            });
+            
+            // Event Call
+            ttq.page({
+              "event_id": generateGUID(),
+            });  
+            
+            console.log("TikTok Pixel: 'PageView' Event Successfully Tracked:", event);
+          } catch (error) {
+            console.error("TikTok Pixel: 'PageView' Event Tracking Failed:", error);
+          }
 
     } catch (error) {
         console.error("Hightouch: Error tracking page view:", error);
