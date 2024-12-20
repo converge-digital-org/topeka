@@ -44,7 +44,6 @@ async function getAdvancedMatchingParametersTT() {
         email: email ? await hashSHA256(email) : null,
         phone_number: phone ? await hashSHA256(phone) : null,
     };
-        console.log("TikTok Advanced Matching Parameters Captured:", getAdvancedMatchingParametersTT);
 }
 
 // Function to generate a 36-character, 128-bit GUID with hyphens
@@ -215,6 +214,9 @@ async function trackPageView() {
               "external_id": getDeviceId(),
                 getAdvancedMatchingParametersTT
             });
+
+              console.log("TikTok Advanced Matching Parameters Captured:", getAdvancedMatchingParametersTT);
+
             
             // Event Call
             ttq.page({
