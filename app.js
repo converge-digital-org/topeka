@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.2
-// LAST UPDATED: 12/20/2024 AT 1:49 PM PT
+// VERSION 6.3
+// LAST UPDATED: 12/20/2024 AT 1:57 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -44,6 +44,7 @@ async function getAdvancedMatchingParametersTT() {
         email: email ? await hashSHA256(email) : null,
         phone_number: phone ? await hashSHA256(phone) : null,
     };
+        console.log("TikTok Advanced Matching Parameters Captured:", getAdvancedMatchingParametersTT);
 }
 
 // Function to generate a 36-character, 128-bit GUID with hyphens
