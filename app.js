@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.7
-// LAST UPDATED: 1/6/2024 AT 2:34 PM PT
+// VERSION 6.8
+// LAST UPDATED: 1/6/2024 AT 3:08 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -419,7 +419,7 @@ async function trackCheckoutInitiated() {
                     "currency": currencyIso,
                 });  
                 
-                console.log("TikTok Pixel: 'InitiateCheckout' Event Successfully Tracked.");
+                console.log("TikTok Pixel: 'InitiateCheckout' Event Successfully Tracked:", event);
               } catch (error) {
                 console.error("TikTok Pixel: 'InitiateCheckout' Event Tracking Failed:", error);
               }
@@ -439,120 +439,115 @@ trackCheckoutInitiated();
 async function trackCheckoutCompletedOnButtonPress() {
     try {
         // Locate the submit button using its ID
-        const submitButton = document.getElementById('btn-submit');
+        const form = document.getElementById('payment-form');
 
-        if (!submitButton) {
-            console.warn("Submit button not found with ID 'btn-submit'.");
+        if (!form) {
+            console.warn("Payment form not found. Unable to track checkout.");
             return;
         }
         
-        console.log("Submit button found. Adding click event listener.");
+        console.log("Payment form found. Adding click event listener.");
 
         // Add a click event listener to the submit button
-        submitButton.addEventListener('click', async function (event) {
-
-            // Fetch additional parameters and form data
-            let additionalParams = {};
-            let advancedMatchingParams = {};
-            let customerFormData = {};
-            let onScreenData = {};
+        form.addEventListener('submit', async function (event) {
 
             try {
                 // Fetch additional parameters and form data
-                additionalParams = await getAdditionalParams();
-                advancedMatchingParams = await getAdvancedMatchingParameters();
-                customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
-                onScreenData = getOnScreenData();
-            } catch (error) {
-                console.error("Error fetching parameters or on-screen data:", error);
-            }
+                let additionalParams = {};
+                let advancedMatchingParams = {};
+                let customerFormData = {};
+                let onScreenData = {};
 
-            // Hightouch tracking
-            if (window.htevents?.track) {
-                window.htevents.track(
-                    "checkout_completed", // Event name
-                    {
-                        ...additionalParams,
-                        ...customerFormData,
-                        ...onScreenData,
-                    },
-                    () => console.log("Hightouch: 'checkout_completed' event tracked successfully.")
-                );
-            } else {
-                console.error("htevents.track is not defined.");
-            }
+                try {
+                    // Fetch additional parameters and form data
+                    additionalParams = await getAdditionalParams();
+                    advancedMatchingParams = await getAdvancedMatchingParameters();
+                    customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
+                    onScreenData = getOnScreenData();
+                } catch (error) {
+                    console.error("Error fetching parameters or on-screen data:", error);
+                }
 
-            const { currencyIso = "USD", paymentPlanTotal = 0 } = onScreenData || {};
+                // Hightouch tracking
+                if (window.htevents?.track) {
+                    window.htevents.track(
+                        "checkout_completed", // Event name
+                        {
+                            ...additionalParams,
+                            ...customerFormData,
+                            ...onScreenData,
+                        },
+                        () => console.log("Hightouch: 'checkout_completed' event tracked successfully.")
+                    );
+                } else {
+                    console.error("htevents.track is not defined.");
+                }
 
-            // Facebook Pixel tracking
-            if (currencyIso && paymentPlanTotal) {
-                fbq('track', 'Purchase', {
-                    currency: currencyIso,
-                    value: paymentPlanTotal,
-                }, {
-                    ...advancedMatchingParams,
-                    eventID: generateGUID(),
-                    external_id: getDeviceId(),
-                });
-                console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
-            } else {
-                console.warn("Facebook Pixel: Missing data for 'Purchase' event. Skipping...");
-            }
+                const { currencyIso = "USD", paymentPlanTotal = 0 } = onScreenData || {};
 
-            // Google Ads Conversion Event
-            if (typeof gtag === "function") {
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-11394685026/BMCCCM_K-uYZEOKwtLkq',
-                    'value': paymentPlanTotal || 0,
-                    'currency': currencyIso || 'USD',
-                });
-                console.log("Google Ads: Checkout completed event fired with data:", {
-                    value: paymentPlanTotal,
-                    currency: currencyIso,
-                });
-            } else {
-                console.warn("Google Ads: 'gtag' is not defined. Skipping conversion event.");
-            }
+                // Facebook Pixel tracking
+                if (currencyIso && paymentPlanTotal) {
+                    fbq('track', 'Purchase', {
+                        currency: currencyIso,
+                        value: paymentPlanTotal,
+                    }, {
+                        ...advancedMatchingParams,
+                        eventID: generateGUID(),
+                        external_id: getDeviceId(),
+                    });
+                    console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
+                } else {
+                    console.warn("Facebook Pixel: Missing data for 'Purchase' event. Skipping...");
+                }
 
-            // GA4: Purchase Checkout
-            if (typeof gtag === 'function') {
-                gtag('event', 'purchase', {
-                    'send_to': 'G-LVNXE75QV1',
-                    'user_id': getDeviceId(),
-                    'event_id': generateGUID(),
-                    'currency': currencyIso,
-                    'value': paymentPlanTotal,
-                });
-                console.log("GA4: Purchase event fired to Google Tag");
-            }
+                // Google Ads Conversion Event
+                if (typeof gtag === "function") {
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-11394685026/BMCCCM_K-uYZEOKwtLkq',
+                        'value': paymentPlanTotal || 0,
+                        'currency': currencyIso || 'USD',
+                    });
+                    console.log("Google Ads: Checkout completed event fired with data:", {
+                        value: paymentPlanTotal,
+                        currency: currencyIso,
+                    });
+                } else {
+                    console.warn("Google Ads: 'gtag' is not defined. Skipping conversion event.");
+                }
 
-            // TikTok: PlaceAnOrder Event
-            try {  
-                const tiktokMatchingParams = await getAdvancedMatchingParametersTT();
-                // Identity Call
-                ttq?.identify({
-                    "external_id": getDeviceId(),
-                    ...tiktokMatchingParams
-                });
-            
-                // Event Call
-                ttq?.track('PlaceAnOrder', {
-                    "event_id": generateGUID(),
-                    "value": paymentPlanTotal,
-                    "currency": currencyIso,
-                });  
-                console.log("TikTok Pixel: 'PlaceAnOrder' Event Successfully Tracked.");
-              } catch (error) {
-                console.error("TikTok Pixel: 'PlaceAnOrder' Event Tracking Failed:", error);
-              }
+                // GA4: Purchase Checkout
+                if (typeof gtag === 'function') {
+                    gtag('event', 'purchase', {
+                        'send_to': 'G-LVNXE75QV1',
+                        'user_id': getDeviceId(),
+                        'event_id': generateGUID(),
+                        'currency': currencyIso,
+                        'value': paymentPlanTotal,
+                    });
+                    console.log("GA4: Purchase event fired to Google Tag");
+                }
+
+                // TikTok: PlaceAnOrder Event
+                try {  
+                    const tiktokMatchingParams = await getAdvancedMatchingParametersTT();
+                    // Identity Call
+                    ttq?.identify({
+                        "external_id": getDeviceId(),
+                        ...tiktokMatchingParams
+                    });
+                
+                    // Event Call
+                    ttq?.track('PlaceAnOrder', {
+                        "event_id": generateGUID(),
+                        "value": paymentPlanTotal,
+                        "currency": currencyIso,
+                    });  
+                    console.log("TikTok Pixel: 'PlaceAnOrder' Event Successfully Tracked.");
+                } catch (error) {
+                    console.error("TikTok Pixel: 'PlaceAnOrder' Event Tracking Failed:", error);
+                }
 
             // Allow the form to proceed after tracking
-            const form = document.getElementById('payment-form');
-            if (form) {
-                setTimeout(() => form.submit(), 100); // Delay to ensure tracking completes
-            } else {
-                console.error("Payment form not found. Unable to submit.");
-            }
         });
     } catch (error) {
         console.error("Hightouch: Error setting up 'checkout_completed' event tracking on button press:", error);
