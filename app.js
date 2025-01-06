@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.9
-// LAST UPDATED: 1/6/2024 AT 3:30 PM PT
+// VERSION 6.10
+// LAST UPDATED: 1/6/2024 AT 3:48 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -485,9 +485,8 @@ async function trackCheckoutCompletedOnButtonPress() {
                         ...advancedMatchingParams,
                         eventID: generateGUID(),
                         external_id: getDeviceId(),
-                    },
-                    () => console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal })
-                    );
+                    });
+                    console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
                     
 
                     // Google Ads Conversion Event
@@ -495,12 +494,11 @@ async function trackCheckoutCompletedOnButtonPress() {
                         'send_to': 'AW-11394685026/BMCCCM_K-uYZEOKwtLkq',
                         'value': paymentPlanTotal || 0,
                         'currency': currencyIso || 'USD',
-                    },
-                    () => console.log("Google Ads: Checkout completed event fired with data:", {
+                    });
+                    console.log("Google Ads: Checkout completed event fired with data:", {
                         value: paymentPlanTotal,
                         currency: currencyIso,
-                    })
-                    );
+                    });
 
                     // GA4: Purchase Checkout
                     gtag('event', 'purchase', {
@@ -509,9 +507,8 @@ async function trackCheckoutCompletedOnButtonPress() {
                         'event_id': generateGUID(),
                         'currency': currencyIso,
                         'value': paymentPlanTotal,
-                    },
-                    () => console.log("GA4: Purchase event fired to Google Tag")
-                    );
+                    });
+                    console.log("GA4: Purchase event fired to Google Tag");
                     
 
                     // TikTok: PlaceAnOrder Event
@@ -527,9 +524,8 @@ async function trackCheckoutCompletedOnButtonPress() {
                         "event_id": generateGUID(),
                         "value": paymentPlanTotal,
                         "currency": currencyIso,
-                    },
-                    console.log("TikTok Pixel: 'PlaceAnOrder' Event Successfully Tracked.")
-                    );
+                    });
+                    console.log("TikTok Pixel: 'PlaceAnOrder' Event Successfully Tracked.");
                 } catch (error) {
                     console.error ("Error during tracking:", error);
                 }
