@@ -419,7 +419,7 @@ async function trackCheckoutInitiated() {
                     "currency": currencyIso,
                 });  
                 
-                console.log("TikTok Pixel: 'InitiateCheckout' Event Successfully Tracked:", event);
+                console.log("TikTok Pixel: 'InitiateCheckout' Event Successfully Tracked.");
               } catch (error) {
                 console.error("TikTok Pixel: 'InitiateCheckout' Event Tracking Failed:", error);
               }
