@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.5
-// LAST UPDATED: 12/20/2024 AT 2:09 PM PT
+// VERSION 6.6
+// LAST UPDATED: 1/6/2025 AT 1:55 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -446,8 +446,6 @@ async function trackCheckoutCompletedOnButtonPress() {
 
             // Add a click event listener to the submit button
             submitButton.addEventListener('click', async function (event) {
-                // Prevent the default button action to ensure tracking completes
-                event.preventDefault();
 
                 // Fetch additional parameters and form data
                 const additionalParams = await getAdditionalParams();
