@@ -228,7 +228,7 @@ async function trackPageView() {
             eventID: generateGUID(),
             advancedMatchingParams,
     });
-    console.log("Facebook Pixel: 'PageView' Event Tracked");
+    console.log("Facebook Pixel: 'PageView' Event Tracked", {vacation_id: vacationId});
 
 
         // GA4: Page View Event
@@ -407,7 +407,7 @@ async function trackCheckoutInitiated() {
                     vacation_id: vacationID,
                     ...advancedMatchingParams,
                 });
-                console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
+                console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal, vacation_id: vacationId });
             } else {
                 console.warn("Facebook Pixel: Missing data for 'InitiateCheckout' event. Skipping...");
             }
@@ -523,7 +523,7 @@ async function trackCheckoutCompletedOnButtonPress() {
                         vacation_id: vacationID,
                         ...advancedMatchingParams,
                     });
-                    console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
+                    console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal, vacation_id: vacationID });
                     
 
                     // Google Ads Conversion Event
