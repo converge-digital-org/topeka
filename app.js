@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 6.12
-// LAST UPDATED: 1/7/2024 AT 1:16 PM PT
+// VERSION 7.1
+// LAST UPDATED: 1/17/2024 AT 2:03 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -168,12 +168,35 @@ async function getAdditionalParams() {
     };
 }
 
+// Function to extract vacation ID based on product description keywords
+function getVacationId() {
+    try {
+        const firstProductDesc = document.querySelector('.products .desc')?.textContent.trim();
+        if (firstProductDesc) {
+            if (firstProductDesc.includes('LADYWORLD')) {
+                return "LW25"; // Vacation ID for LADYWORLD
+            } else if (firstProductDesc.includes('Odies Beach Weekend')) {
+                return "OD25"; // Vacation ID for ODIES
+            } else if (firstProductDesc.includes('Whiskey Moon')) {
+                return "WM25"; // Vacation ID for ODIES
+            } else if (firstProductDesc.includes('Bootleggers Bonfire')) {
+                return "BB25"; // Vacation ID for ODIES
+            }
+        }
+        return null; // Return null if no match
+    } catch (error) {
+        console.error("Error extracting vacation ID:", error);
+        return null;
+    }
+}
+
 console.log("GA4: Google Tag initialized with ID: G-LVNXE75QV1");
 
 // Track Page Views
 async function trackPageView() {
     try {
         const additionalParams = await getAdditionalParams();
+        const vacationID = await getVacationId();
 
          // Facebook Advanced Matching Parameters
         const advancedMatchingParams = await getAdvancedMatchingParameters();
@@ -183,7 +206,8 @@ async function trackPageView() {
             "partial.ly",
             "page_viewed",
             {
-                ...additionalParams
+                ...additionalParams,
+                vacation_id: vacationID,
             },
             function() {
                 console.log("Hightouch: Page view tracked");
@@ -195,6 +219,8 @@ async function trackPageView() {
             external_id: getDeviceId(),
             eventID: generateGUID(),
             advancedMatchingParams,
+            vacation_id: vacationID,
+
     });
     console.log("Facebook Pixel: 'PageView' Event Tracked");
 
@@ -347,6 +373,7 @@ async function trackCheckoutInitiated() {
                 console.error("Error parsing customerFormData from localStorage:", error);
             }
             const onScreenData = getOnScreenData();
+            const vacationID = await getVacationId();
             const { currencyIso = "USD", paymentPlanTotal = 0 } = onScreenData || {};
 
             if (window.htevents && typeof window.htevents.track === 'function') {
@@ -356,6 +383,7 @@ async function trackCheckoutInitiated() {
                         ...additionalParams,
                         ...customerFormData,
                         ...onScreenData,
+                        vacation_id: vacationID,
                     },
                     () => console.log("Hightouch: 'checkout_started' event tracked successfully with on-screen data.")
                 );
@@ -372,6 +400,7 @@ async function trackCheckoutInitiated() {
                     ...advancedMatchingParams,
                     eventID: generateGUID(),
                     external_id: getDeviceId(),
+                    vacation_id: vacationID,
                 });
                 console.log("Facebook Pixel: 'InitiateCheckout' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
             } else {
@@ -417,6 +446,7 @@ async function trackCheckoutInitiated() {
                     "event_id": generateGUID(),
                     "value": paymentPlanTotal,
                     "currency": currencyIso,
+                    "vacation_id": vacationID,
                 });  
                 
                 console.log("TikTok Pixel: 'InitiateCheckout' Event Successfully Tracked:");
@@ -463,6 +493,7 @@ async function trackCheckoutCompletedOnButtonPress() {
                     const advancedMatchingParams = await getAdvancedMatchingParameters();
                     const customerFormData = JSON.parse(localStorage.getItem('customerFormData')) || {};
                     const onScreenData = getOnScreenData();
+                    const vacationID = getVacationId();
 
                     // Hightouch tracking
                     window.htevents.track(
@@ -471,6 +502,7 @@ async function trackCheckoutCompletedOnButtonPress() {
                             ...additionalParams,
                             ...customerFormData,
                             ...onScreenData,
+                            vacation_id: vacationID,
                         },
                         () => console.log("Hightouch: 'checkout_completed' event tracked successfully.")
                     );
@@ -485,6 +517,7 @@ async function trackCheckoutCompletedOnButtonPress() {
                         ...advancedMatchingParams,
                         eventID: generateGUID(),
                         external_id: getDeviceId(),
+                        vacation_id: vacationID,
                     });
                     console.log("Facebook Pixel: 'Purchase' Event Tracked:", { currency: currencyIso, value: paymentPlanTotal });
                     
@@ -524,6 +557,7 @@ async function trackCheckoutCompletedOnButtonPress() {
                         "event_id": generateGUID(),
                         "value": paymentPlanTotal,
                         "currency": currencyIso,
+                        "vacation_id": vacationID,
                     });
                     console.log("TikTok Pixel: 'PlaceAnOrder' Event Successfully Tracked.");
                 } catch (error) {
