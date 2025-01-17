@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 7.2
-// LAST UPDATED: 1/17/2024 AT 2:19 PM PT
+// VERSION 7.3
+// LAST UPDATED: 1/17/2024 AT 2:25 PM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -171,19 +171,26 @@ async function getAdditionalParams() {
 // Function to extract vacation ID based on product description keywords
 function getVacationId() {
     try {
-        const firstProductDesc = document.querySelector('.products .desc')?.textContent.trim();
-        if (firstProductDesc) {
-            if (firstProductDesc.includes('LADYWORLD')) {
+        // Select all elements with the class 'desc'
+        const productDescriptions = document.querySelectorAll('.products .desc');
+
+        // Iterate over each description and check for keywords
+        for (const descElement of productDescriptions) {
+            const descriptionText = descElement.textContent.trim();
+
+            if (descriptionText.includes('LADYWORLD')) {
                 return "LW25"; // Vacation ID for LADYWORLD
-            } else if (firstProductDesc.includes('Odies Beach Weekend')) {
+            } else if (descriptionText.includes('Odies Beach Weekend')) {
                 return "OD25"; // Vacation ID for ODIES
-            } else if (firstProductDesc.includes('Whiskey Moon')) {
-                return "WM25"; // Vacation ID for ODIES
-            } else if (firstProductDesc.includes('Bootleggers Bonfire')) {
-                return "BB25"; // Vacation ID for ODIES
+            } else if (descriptionText.includes('Whiskey Moon')) {
+                return "WM25"; // Vacation ID for Whiskey Moon
+            } else if (descriptionText.includes('Bootleggers Bonfire')) {
+                return "BB25"; // Vacation ID for Bootleggers Bonfire
             }
         }
-        return null; // Return null if no match
+
+        // Return null if no matching keyword is found
+        return null;
     } catch (error) {
         console.error("Error extracting vacation ID:", error);
         return null;
