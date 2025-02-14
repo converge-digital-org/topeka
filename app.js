@@ -1,7 +1,7 @@
 // CLIENT: TOPEKA
 // HIGHTOUCH EVENTS APP.JS FILE
-// VERSION 7.4
-// LAST UPDATED: 1/17/2024 AT 2:58 PM PT
+// VERSION 7.5
+// LAST UPDATED: 2/14/2024 AT 11:24 AM PT
 
 console.log("Hightouch Events app.js script loaded");
 
@@ -186,6 +186,8 @@ function getVacationId() {
                 return "WM25"; // Vacation ID for Whiskey Moon
             } else if (descriptionText.includes('Bootleggers Bonfire')) {
                 return "BB25"; // Vacation ID for Bootleggers Bonfire
+            } else if (descriptionText.includes('Styx')) {
+                return "STYX25"; // Vacation ID for Bootleggers Bonfire
             }
         }
 
