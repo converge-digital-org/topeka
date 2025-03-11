@@ -187,8 +187,9 @@ function getVacationId() {
             } else if (descriptionText.includes('Bootleggers Bonfire')) {
                 return "BB25"; // Vacation ID for Bootleggers Bonfire
             } else if (descriptionText.includes('Styx')) {
-                return "STYX25"; // Vacation ID for Bootleggers Bonfire
-            }
+                return "STYX25"; // Vacation ID for Styx
+            } else if (descriptionText.includes('Avett Moon')) {
+                return "AM25"; // Vacation ID for Avett Moon
         }
 
         // Return null if no matching keyword is found
